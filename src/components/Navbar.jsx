@@ -167,19 +167,17 @@ export default function Navbar() {
               </li>
             ))}
             <li className="mt-2 px-2">
-              <ScrollLink
-                to="contact"
-                smooth={true}
-                duration={200}
-                offset={-80}
-                hashSpy={false}
-                isDynamic={true}
+              <a
+                href="https://forms.gle/sUr1uxnakHbk4Tyv8"
+                target="_blank"
+                rel="noopener noreferrer"
                 onClick={() => setOpen(false)}
+                aria-label="Book a slot"
                 className="flex items-center justify-center gap-2 bg-gradient-to-r from-blue-600 to-blue-500 text-white px-5 py-3 rounded-lg cursor-pointer font-semibold text-sm hover:shadow-2xl transition-all duration-150 active:scale-95"
               >
-                Get Started
+                Book Slot
                 <ArrowRight className="w-4 h-4" />
-              </ScrollLink>
+              </a>
             </li>
           </ul>
         </div>
