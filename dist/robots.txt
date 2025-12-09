@@ -1,0 +1,10 @@
+User-agent: *
+Allow: /
+
+# Sitemap Location
+Sitemap: https://digioptimized.in/sitemap.xml
+
+# Prevent indexing of unnecessary files
+Disallow: /static/js/*.map
+Disallow: /static/css/*.map
+Disallow: /assets/*.map
