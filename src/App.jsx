@@ -10,9 +10,11 @@ import FAQ from "./components/FAQ";
 import Contact from "./components/Contact";
 import Footer from "./components/Footer";
 import Legal from "./pages/Legal";
+import Preloader from "./components/Preloader";
 
 export default function App() {
   const [hash, setHash] = useState(typeof window !== 'undefined' ? window.location.hash : '');
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const onHash = () => setHash(window.location.hash || '');
@@ -82,9 +84,13 @@ export default function App() {
   }, [hash]);
 
   return (
-    <div className="font-sans bg-white text-gray-800 overflow-hidden">
-      {/* Fixed Navbar */}
-      <Navbar />
+    <>
+      {/* Premium Preloader */}
+      {isLoading && <Preloader onComplete={() => setIsLoading(false)} />}
+      
+      <div className="font-sans bg-white text-gray-800 overflow-hidden">
+        {/* Fixed Navbar */}
+        <Navbar />
       
       {/* Enhanced Page Content with Smooth Transitions */}
       <main className="relative">
@@ -113,7 +119,8 @@ export default function App() {
         )}
       </main>
       
-      <Footer />
-    </div>
+        <Footer />
+      </div>
+    </>
   );
 }

@@ -36,60 +36,70 @@ export default function Portfolio() {
   ];
 
   return (
-  <section id="portfolio" className="py-12 md:py-20 relative overflow-hidden">
-      <div className="container mx-auto px-4 md:px-6">
-        {/* Section Header */}
-        <div className="text-center max-w-3xl mx-auto mb-16 fade-in-up">
-          <span className="inline-block px-4 py-2 bg-blue-50 border border-blue-200 rounded-full text-sm font-medium text-blue-700 mb-4">
-            Portfolio
-          </span>
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-display font-bold mb-4">
-            Real Results from <span className="gradient-text">Real Businesses</span>
+  <section id="portfolio" className="py-20 md:py-32 relative overflow-hidden bg-white">
+      {/* Background Elements */}
+      <div className="absolute inset-0 -z-10">
+        <div className="absolute top-0 left-1/4 w-96 h-96 bg-blue-200 rounded-full mix-blend-multiply filter blur-3xl opacity-10" />
+        <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-purple-200 rounded-full mix-blend-multiply filter blur-3xl opacity-10" />
+      </div>
+      
+      <div className="container mx-auto px-4 md:px-8 lg:px-12">
+        {/* Premium Section Header */}
+        <div className="text-center max-w-4xl mx-auto mb-20 fade-in-up">
+          <div className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-50 to-cyan-50 border border-blue-200/50 rounded-full text-sm font-semibold text-blue-700 mb-6 shadow-lg shadow-blue-500/10">
+            <span className="w-2 h-2 bg-blue-500 rounded-full animate-pulse" />
+            Our Portfolio
+          </div>
+          <h2 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-display font-black mb-6 leading-tight">
+            Real Results from{" "}
+            <span className="bg-gradient-to-r from-blue-600 via-cyan-500 to-purple-600 bg-clip-text text-transparent">
+              Real Businesses
+            </span>
           </h2>
-          <p className="text-lg text-gray-600">
+          <p className="text-xl md:text-2xl text-gray-600 font-light">
             See how we've transformed businesses like yours
           </p>
         </div>
 
-        {/* Portfolio Grid */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
+        {/* Ultra-Modern Portfolio Grid */}
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-10 max-w-7xl mx-auto">
           {projects.map((project, idx) => (
             <div 
               key={project.title}
-              className="group glass rounded-2xl overflow-hidden hover-lift card-shine"
+              className="group relative bg-white rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl hover:shadow-blue-500/20 transition-all duration-500 hover:-translate-y-3 border border-gray-100"
               style={{ animationDelay: `${idx * 0.1}s` }}
             >
-              {/* Project Image */}
-              <div className="relative h-56 bg-gradient-to-br from-blue-100 to-cyan-100 overflow-hidden">
+              {/* Project Image with Enhanced Overlay */}
+              <div className="relative h-72 bg-gradient-to-br from-blue-100 to-cyan-100 overflow-hidden">
                 <img 
                   src={project.image} 
                   alt={project.title}
-                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end justify-center pb-4">
+                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end justify-center pb-6">
                   {project.url ? (
-                    <a href={project.url} target="_blank" rel="noreferrer" className="bg-white text-blue-600 px-4 py-2 rounded-full font-medium flex items-center gap-2 transform translate-y-4 group-hover:translate-y-0 transition-transform">
+                    <a href={project.url} target="_blank" rel="noreferrer" className="bg-white text-blue-600 px-6 py-3 rounded-2xl font-bold flex items-center gap-2 transform translate-y-8 group-hover:translate-y-0 transition-all duration-500 shadow-xl hover:shadow-2xl hover:scale-105">
                       Visit Site
-                      <ExternalLink className="w-4 h-4" />
+                      <ExternalLink className="w-5 h-5" />
                     </a>
                   ) : (
-                    <button className="bg-white text-blue-600 px-4 py-2 rounded-full font-medium flex items-center gap-2 transform translate-y-4 group-hover:translate-y-0 transition-transform">
+                    <button className="bg-white text-blue-600 px-6 py-3 rounded-2xl font-bold flex items-center gap-2 transform translate-y-8 group-hover:translate-y-0 transition-all duration-500 shadow-xl hover:shadow-2xl hover:scale-105">
                       View Details
-                      <ExternalLink className="w-4 h-4" />
+                      <ExternalLink className="w-5 h-5" />
                     </button>
                   )}
                 </div>
               </div>
 
-              {/* Project Info */}
-              <div className="p-6">
-                <span className="text-xs font-semibold text-blue-600 uppercase tracking-wide">
+              {/* Enhanced Project Info */}
+              <div className="p-8">
+                <span className="inline-block px-3 py-1 bg-gradient-to-r from-blue-500 to-cyan-500 text-white text-xs font-bold uppercase tracking-wide rounded-full mb-4">
                   {project.category}
                 </span>
-                <h3 className="font-display font-bold text-xl mt-2 mb-3">{project.title}</h3>
+                <h3 className="font-display font-bold text-2xl mb-4 text-gray-900 group-hover:text-blue-600 transition-colors">{project.title}</h3>
                 
-                {/* Testimonial */}
-                <div className="bg-blue-50 rounded-xl p-4 mb-3">
+                {/* Premium Testimonial Card */}
+                <div className="bg-gradient-to-br from-blue-50 to-cyan-50 rounded-2xl p-5 mb-3 border border-blue-100">
                   <div className="flex gap-1 mb-2">
                     {[...Array(project.rating)].map((_, i) => (
                       <Star key={i} className="w-4 h-4 fill-yellow-400 text-yellow-400" />
