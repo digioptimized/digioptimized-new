@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Digioptimized | Conversion Systems for Small Business</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"
+        integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --accent: #4f46e5;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            scroll-behavior: smooth;
+            background-color: #000;
+        }
+
+        .reveal {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .text-gradient {
+            background: linear-gradient(135deg, #ffffff 0%, #a1a1aa 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .bg-indigo-glow {
+            background: radial-gradient(circle at center, rgba(79, 70, 229, 0.12) 0%, transparent 70%);
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.02);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .btn-glow:hover {
+            box-shadow: 0 0 30px rgba(79, 70, 229, 0.3);
+        }
+
+        .cta-bottom-nav {
+            transform: translateY(100%);
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .cta-bottom-nav.visible {
+            transform: translateY(0);
+        }
+    </style>
+</head>
+
+<body class="text-zinc-300 selection:bg-indigo-500 selection:text-white">
+
+    <!-- Navigation -->
+    <nav class="fixed w-full z-50 bg-black/80 backdrop-blur-xl border-b border-white/5">
+        <div class="max-w-7xl mx-auto px-6 h-20 flex justify-between items-center">
+            <div class="text-xl font-extrabold tracking-tight text-white flex items-center gap-2">
+                <!-- <span class="text-indigo-500"></span> -->Digioptimized.
+            </div>
+            <div
+                class="hidden md:flex items-center space-x-8 text-[11px] font-bold uppercase tracking-widest text-zinc-500">
+                <a href="#problem" class="hover:text-indigo-400 transition">The Problem</a>
+                <a href="#who" class="hover:text-indigo-400 transition">Who We Are</a>
+                <a href="#process" class="hover:text-indigo-400 transition">Our Process</a>
+            </div>
+            <a href="https://wa.me/918438689782?text=Audit"
+                class="bg-white text-black px-6 py-2.5 rounded-full font-bold text-xs uppercase hover:bg-indigo-600 hover:text-white transition-all">
+                WhatsApp "Audit"
+            </a>
+        </div>
+    </nav>
+
+    <!-- HERO SECTION -->
+    <section class="relative min-h-screen flex items-center justify-center overflow-hidden pt-20">
+        <div class="absolute top-1/4 left-1/2 -translate-x-1/2 w-full h-[500px] bg-indigo-glow pointer-events-none">
+        </div>
+
+        <div class="relative z-10 max-w-5xl mx-auto px-6 text-center">
+            <!-- <div class="inline-block px-4 py-1.5 mb-8 rounded-full border border-indigo-500/30 bg-indigo-500/10 text-[10px] font-black uppercase tracking-[0.3em] text-indigo-400 reveal">
+                No Website Fluff. Just Results. -->
+            <!-- </div> -->
+
+            <h1 class="text-5xl md:text-8xl font-extrabold mb-8 leading-[1.05] tracking-tight text-white reveal">
+                Traffic isn’t your problem. <br>
+                <span class="text-gradient italic">Conversion is.</span>
+            </h1>
+
+            <p class="text-lg md:text-xl text-zinc-400 mb-12 max-w-3xl mx-auto leading-relaxed reveal">
+                We help small businesses turn visitors into customers using conversion-focused websites, funnels, and
+                Meta Ads.
+            </p>
+
+            <div class="flex flex-col items-center gap-6 reveal">
+                <a href="https://wa.me/918438689782?text=Audit"
+                    class="btn-glow w-full sm:w-auto px-12 py-6 bg-indigo-600 text-white rounded-2xl font-bold text-2xl transition-all transform hover:-translate-y-1">
+                    👉 WhatsApp "Audit" 👈
+                </a>
+                <div class="flex items-center gap-4 text-[11px] font-bold text-zinc-500 uppercase tracking-widest">
+                    <span class="flex -space-x-1">
+                        <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                    </span>
+                    Built for businesses that struggle with leads
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- PROBLEM SECTION -->
+    <section id="problem" class="py-32 bg-zinc-950 border-y border-white/5">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="grid lg:grid-cols-2 gap-20 items-start">
+                <div class="reveal">
+                    <h2 class="text-3xl md:text-5xl font-extrabold text-white mb-8 tracking-tight uppercase italic">
+                        The problem most <br><span class="text-indigo-500">small businesses face</span>
+                    </h2>
+                    <p class="text-zinc-400 text-lg mb-10 leading-relaxed">
+                        Most small businesses already get traffic from Instagram, Google, Ads, and Referrals. But they
+                        still struggle with:
+                    </p>
+                    <ul class="space-y-6">
+                        <li class="flex items-start gap-4">
+                            <span class="text-indigo-500 font-bold">01</span>
+                            <div>
+                                <h4 class="text-white font-bold uppercase tracking-wide">Low inquiries</h4>
+                                <p class="text-sm text-zinc-500">People see your business but don't ask about it.</p>
+                            </div>
+                        </li>
+                        <li class="flex items-start gap-4">
+                            <span class="text-indigo-500 font-bold">02</span>
+                            <div>
+                                <h4 class="text-white font-bold uppercase tracking-wide">No consistent leads</h4>
+                                <p class="text-sm text-zinc-500">One good month followed by three dry ones.</p>
+                            </div>
+                        </li>
+                        <li class="flex items-start gap-4">
+                            <span class="text-indigo-500 font-bold">03</span>
+                            <div>
+                                <h4 class="text-white font-bold uppercase tracking-wide">Visitors leaving without action
+                                </h4>
+                                <p class="text-sm text-zinc-500">The "window shopper" effect on your digital storefront.
+                                </p>
+                            </div>
+                        </li>
+                        <li class="flex items-start gap-4">
+                            <span class="text-indigo-500 font-bold">04</span>
+                            <div>
+                                <h4 class="text-white font-bold uppercase tracking-wide">Ad Spend Waste</h4>
+                                <p class="text-sm text-zinc-500">Money spent on ads with zero return on investment.</p>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="glass-card p-12 rounded-[2.5rem] reveal">
+                    <h3 class="text-3xl font-bold text-white mb-6 leading-tight">Why visitors <span
+                            class="text-indigo-400">don’t convert</span></h3>
+                    <p class="text-zinc-400 mb-8 leading-relaxed">
+                        Because most businesses don’t have: Clear messaging, a strong call-to-action, a guided user
+                        flow, or trust-building elements.
+                    </p>
+                    <div class="p-6 bg-red-500/5 border border-red-500/20 rounded-2xl mb-10">
+                        <p class="text-red-400 font-bold text-center italic uppercase tracking-tighter">
+                            "Confused visitors don't buy."
+                        </p>
+                    </div>
+                    <a href="https://wa.me/918438689782?text=Audit"
+                        class="flex justify-center w-full py-5 bg-white text-black rounded-xl font-bold uppercase tracking-widest text-sm hover:bg-indigo-600 hover:text-white transition-all">
+                        👉 WhatsApp "Audit" 👈
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- WHO WE ARE SECTION -->
+    <section id="who" class="py-32 bg-black overflow-hidden">
+        <div class="max-w-4xl mx-auto px-6 text-center reveal">
+            <h2 class="text-sm font-black text-indigo-500 uppercase tracking-[0.4em] mb-6">Who We Are</h2>
+            <h3 class="text-4xl md:text-6xl font-extrabold text-white mb-10 tracking-tighter">
+                Based in <span class="italic underline decoration-indigo-500 underline-offset-8 text-indigo-500">Tamil
+                    Nadu</span>
+            </h3>
+            <p class="text-xl text-zinc-400 leading-relaxed font-medium mb-12">
+                <span class="text-white font-bold">Digioptimized</span> is a conversion-focused web and growth agency.
+                We don’t focus on likes or vanity metrics. We focus on building systems that help businesses convert
+                traffic into customers.
+            </p>
+            <div class="grid grid-cols-2 md:grid-cols-3 gap-8 text-left">
+                <div class="border-l border-white/10 pl-6 py-4">
+                    <div class="text-white font-black mb-1">Clear Communication</div>
+                    <div class="text-[10px] uppercase text-zinc-600 tracking-widest">Standard Practice</div>
+                </div>
+                <div class="border-l border-white/10 pl-6 py-4">
+                    <div class="text-white font-black mb-1">Fast Execution</div>
+                    <div class="text-[10px] uppercase text-zinc-600 tracking-widest">Turnaround Time</div>
+                </div>
+                <div class="border-l border-white/10 pl-6 py-4 hidden md:block">
+                    <div class="text-white font-black mb-1">Practical Systems</div>
+                    <div class="text-[10px] uppercase text-zinc-600 tracking-widest">Our Foundation</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- WHAT WE DO -->
+    <section class="py-32 bg-zinc-950">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center mb-20 reveal">
+                <h2 class="text-4xl md:text-5xl font-extrabold text-white mb-4 tracking-tighter uppercase italic">What
+                    we do</h2>
+                <p class="text-zinc-500 uppercase text-xs font-bold tracking-[0.3em]">We build conversion systems, not
+                    just websites.</p>
+            </div>
+
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div class="glass-card p-10 rounded-3xl reveal">
+                    <div class="text-indigo-500 text-3xl mb-6">
+                        <i class="fa-solid fa-bullseye"></i>
+                    </div>
+                    <h4 class="text-white font-bold mb-3 uppercase tracking-wide">
+                        Landing Pages
+                    </h4>
+                    <p class="text-xs text-zinc-500 leading-relaxed">
+                        Single-goal pages built to drive visitors toward
+                        one action: Conversion.
+                    </p>
+                </div>
+
+                <div class="glass-card p-10 rounded-3xl reveal">
+                    <div class="text-indigo-500 text-3xl mb-6">
+                        <i class="fa-solid fa-filter-circle-dollar"></i>
+                    </div>
+                    <h4 class="text-white font-bold mb-3 uppercase tracking-wide">
+                        Clear Funnels
+                    </h4>
+                    <p class="text-xs text-zinc-500 leading-relaxed">
+                        Strategic pathways that guide visitors from curiosity to commitment.
+                    </p>
+                </div>
+
+                <div class="glass-card p-10 rounded-3xl reveal">
+                    <div class="text-indigo-500 text-3xl mb-6">
+                        <i class="fa-solid fa-magnet"></i>
+                    </div>
+                    <h4 class="text-white font-bold mb-3 uppercase tracking-wide">
+                        Lead Capture
+                    </h4>
+                    <p class="text-xs text-zinc-500 leading-relaxed">
+                        Systems to ensure no potential customer leaves
+                        without leaving a way to follow up.
+                    </p>
+                </div>
+
+                <div class="glass-card p-10 rounded-3xl reveal">
+                    <div class="text-indigo-500 text-3xl mb-6">
+                        <i class="fa-solid fa-arrow-trend-up"></i>
+                    </div>
+                    <h4 class="text-white font-bold mb-3 uppercase tracking-wide">
+                        Optimized Ads
+                    </h4>
+                    <p class="text-xs text-zinc-500 leading-relaxed">
+                        Meta Ads scaled only after the conversion system is
+                        proven and fixed.
+                    </p>
+                </div>
+
+            </div>
+
+            <div class="mt-16 text-center reveal">
+                <p class="text-white text-lg font-bold mb-6 italic">One goal: Turn visitors into customers.</p>
+                <a href="https://wa.me/918438689782?text=Audit"
+                    class="text-indigo-400 font-bold border-b border-indigo-400 pb-1 hover:text-white hover:border-white transition">
+                    👉 WhatsApp "Audit" 👈
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- QUALIFICATION SECTION -->
+    <section class="py-32 bg-black border-y border-white/5">
+        <div class="max-w-6xl mx-auto px-6">
+            <div class="grid md:grid-cols-2 gap-12">
+                <div class="p-12 border border-white/5 rounded-3xl bg-white/[0.01] reveal">
+                    <h4
+                        class="text-emerald-400 font-bold mb-8 uppercase text-xs tracking-widest flex items-center gap-2">
+                        <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+                        This is for you if:
+                    </h4>
+                    <ul class="space-y-4 text-sm font-medium">
+                        <li>• You have a business and want real sales</li>
+                        <li>• You already get some traffic</li>
+                        <li>• Your website or Instagram isn’t converting</li>
+                        <li>• You’re tired of trying random tactics</li>
+                        <li>• You want a clear system, not confusion</li>
+                    </ul>
+                </div>
+                <div class="p-12 border border-white/5 rounded-3xl bg-white/[0.01] reveal">
+                    <h4 class="text-red-500 font-bold mb-8 uppercase text-xs tracking-widest flex items-center gap-2">
+                        <span class="w-2 h-2 rounded-full bg-red-500"></span>
+                        This is NOT for you if:
+                    </h4>
+                    <ul class="space-y-4 text-sm font-medium text-zinc-600">
+                        <li>• You’re only looking for free advice</li>
+                        <li>• You want followers, not customers</li>
+                        <li>• You’re not serious about fixing your setup</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- PROCESS SECTION -->
+    <section id="process" class="py-32 bg-zinc-950">
+        <div class="max-w-7xl mx-auto px-6">
+            <h2 class="text-4xl md:text-5xl font-black text-white text-center mb-20 italic uppercase tracking-tighter">
+                How we work</h2>
+            <div class="grid md:grid-cols-5 gap-4 relative">
+                <div class="p-8 glass-card rounded-2xl text-center reveal">
+                    <div class="text-indigo-500 font-black mb-4">01</div>
+                    <h5 class="text-white font-bold mb-2">Audit</h5>
+                    <p class="text-[10px] text-zinc-500 uppercase tracking-widest">Analyze GBP, Web, IG</p>
+                </div>
+                <div class="hidden md:flex items-center justify-center opacity-20">→</div>
+                <div class="p-8 glass-card rounded-2xl text-center reveal">
+                    <div class="text-indigo-500 font-black mb-4">02</div>
+                    <h5 class="text-white font-bold mb-2">Identify</h5>
+                    <p class="text-[10px] text-zinc-500 uppercase tracking-widest">Find conversion leaks</p>
+                </div>
+                <div class="hidden md:flex items-center justify-center opacity-20">→</div>
+                <div class="p-8 glass-card rounded-2xl text-center reveal">
+                    <div class="text-indigo-500 font-black mb-4">03</div>
+                    <h5 class="text-white font-bold mb-2">Fix</h5>
+                    <p class="text-[10px] text-zinc-500 uppercase tracking-widest">Messaging & Flow</p>
+                </div>
+            </div>
+            <div class="grid md:grid-cols-5 gap-4 mt-4">
+                <div class="md:col-start-2 p-8 glass-card rounded-2xl text-center reveal">
+                    <div class="text-indigo-500 font-black mb-4">04</div>
+                    <h5 class="text-white font-bold mb-2">Build</h5>
+                    <p class="text-[10px] text-zinc-500 uppercase tracking-widest">Simple System</p>
+                </div>
+                <div class="hidden md:flex items-center justify-center opacity-20">→</div>
+                <div class="p-8 glass-card rounded-2xl text-center reveal">
+                    <div class="text-indigo-500 font-black mb-4">05</div>
+                    <h5 class="text-white font-bold mb-2">Scale</h5>
+                    <p class="text-[10px] text-zinc-500 uppercase tracking-widest">Meta Ads only if needed</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- WHY AUDIT (LOW FRICTION) -->
+    <section class="py-32 bg-white text-black">
+        <div class="max-w-4xl mx-auto px-6 text-center reveal">
+            <h2 class="text-4xl font-black mb-8 italic uppercase tracking-tighter">Why start with a conversion audit?
+            </h2>
+            <p class="text-xl mb-12 text-zinc-700 font-medium leading-relaxed">
+                Before building anything, we identify what’s broken, what’s confusing visitors, and what to fix first
+                for impact. This avoids wasting time and money.
+            </p>
+            <a href="https://wa.me/918438689782?text=Audit"
+                class="inline-flex items-center gap-4 px-12 py-6 bg-black text-white rounded-2xl font-bold text-2xl hover:bg-indigo-600 transition-all transform hover:scale-105">
+                👉 WhatsApp "Audit" 👈
+            </a>
+        </div>
+    </section>
+
+    <!-- FINAL MESSAGE -->
+    <footer class="py-24 bg-black border-t border-white/5">
+        <div class="max-w-5xl mx-auto px-6 text-center">
+            <h3 class="text-3xl font-bold text-white mb-6">If your business feels stuck...</h3>
+            <p class="text-zinc-500 mb-12 max-w-xl mx-auto italic">
+                It’s not because of lack of traffic. It’s because conversion is broken. Let’s fix that first.
+            </p>
+
+            <div class="flex flex-col items-center gap-10">
+                <div class="text-4xl font-black text-white tracking-tighter">
+                    <span class="text-indigo-500"></span>Digioptimized.
+                </div>
+
+                <div
+                    class="flex flex-wrap justify-center gap-10 text-[10px] font-bold uppercase tracking-[0.3em] text-zinc-700">
+                    <span>Tamil Nadu, India</span>
+                    <span>No Guesswork</span>
+                    <span>No Vanity Metrics</span>
+                </div>
+
+                <div class="text-[9px] text-zinc-800 uppercase font-black">
+                    &copy; 2024 Digioptimized. Engineering ROI Daily.
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- STICKY MOBILE CTA -->
+    <div id="sticky-cta"
+        class="cta-bottom-nav fixed bottom-0 left-0 right-0 p-4 md:hidden z-[60] bg-gradient-to-t from-black via-black/90 to-transparent">
+        <a href="https://wa.me/918438689782?text=Audit"
+            class="flex items-center justify-center w-full bg-indigo-600 text-white py-5 rounded-2xl font-bold text-xl shadow-2xl">
+            👉 WhatsApp "Audit" 👈
+        </a>
+    </div>
+
+    <script>
+        // Scroll Animation Observer
+        const revealCallback = (entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                }
+            });
+        };
+
+        const revealObserver = new IntersectionObserver(revealCallback, { threshold: 0.1 });
+        document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+        // Sticky Mobile CTA Visibility Logic
+        window.addEventListener('scroll', () => {
+            const stickyCta = document.getElementById('sticky-cta');
+            if (window.scrollY > 500) {
+                stickyCta.classList.add('visible');
+            } else {
+                stickyCta.classList.remove('visible');
+            }
+        });
+
+        // Smooth Scrolling for Internal Links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+    </script>
+</body>
+
+</html>
