@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { Mail, Phone, MapPin, Send, CheckCircle } from "lucide-react";
+import React, { useState, useEffect, useRef } from "react";
+import { Mail, Phone, MapPin, Send, CheckCircle, Clock, MessageSquare } from "lucide-react";
 
 export default function Contact() {
   const [formData, setFormData] = useState({
@@ -11,11 +11,23 @@ export default function Contact() {
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [isVisible, setIsVisible] = useState(false);
+  const sectionRef = useRef(null);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) setIsVisible(true);
+      },
+      { threshold: 0.1 }
+    );
+    if (sectionRef.current) observer.observe(sectionRef.current);
+    return () => observer.disconnect();
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // basic validation
     if (!formData.name.trim() || !formData.email.trim() || !formData.message.trim()) {
       alert("Please fill your name, email and message before sending.");
       return;
@@ -23,13 +35,11 @@ export default function Contact() {
 
     setLoading(true);
 
-    // Web3Forms key (preferred if provided) and EmailJS fallback
     const web3Key = import.meta.env.VITE_WEB3FORMS_KEY;
     const serviceId = import.meta.env.VITE_EMAILJS_SERVICE_ID;
     const templateId = import.meta.env.VITE_EMAILJS_TEMPLATE_ID;
     const userId = import.meta.env.VITE_EMAILJS_USER_ID;
 
-    // Try Web3Forms first (client-only, easy to set up)
     if (web3Key) {
       try {
         const payload = {
@@ -37,35 +47,34 @@ export default function Contact() {
           subject: `Website Contact: ${formData.name}`,
           name: formData.name,
           email: formData.email,
-          phone: formData.phone || '',
+          phone: formData.phone || "",
           message: formData.message,
         };
 
-        const res = await fetch('https://api.web3forms.com/submit', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+        const res = await fetch("https://api.web3forms.com/submit", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
           body: JSON.stringify(payload),
         });
 
         const json = await res.json();
         if (res.ok && json.success) {
           setSubmitted(true);
-          setFormData({ name: '', email: '', phone: '', message: '' });
+          setFormData({ name: "", email: "", phone: "", message: "" });
           setTimeout(() => setSubmitted(false), 3000);
           setLoading(false);
           setError(null);
           return;
         } else {
-          console.error('Web3Forms error', json);
-          setError('There was an issue sending via Web3Forms. Falling back to EmailJS if available.');
+          console.error("Web3Forms error", json);
+          setError("There was an issue sending via Web3Forms.");
         }
       } catch (err) {
-        console.error('Web3Forms exception', err);
-        setError('Failed to send via Web3Forms. Falling back to EmailJS if available.');
+        console.error("Web3Forms exception", err);
+        setError("Failed to send via Web3Forms.");
       }
     }
 
-    // If Web3Forms didn't run or failed, try EmailJS (if configured)
     if (serviceId && templateId && userId) {
       try {
         const payload = {
@@ -89,10 +98,9 @@ export default function Contact() {
         if (!res.ok) {
           const text = await res.text();
           console.error("EmailJS error:", text);
-          setError("There was an issue sending your message. Please try again later.");
+          setError("There was an issue sending your message.");
         } else {
           setSubmitted(true);
-          // Optionally clear form
           setFormData({ name: "", email: "", phone: "", message: "" });
           setTimeout(() => setSubmitted(false), 3000);
           setLoading(false);
@@ -101,14 +109,13 @@ export default function Contact() {
         }
       } catch (err) {
         console.error(err);
-        setError("Failed to send message via EmailJS. Please try again later.");
-        // do not open mail client automatically; user must configure EmailJS to send
+        setError("Failed to send message via EmailJS.");
         setLoading(false);
         return;
       }
     }
-    // If we reach here, EmailJS env vars were missing. Show an actionable fallback.
-    setError("Email sending is not configured. You can contact us directly at digioptimized@gmail.com or open your mail client to send the message (pre-filled).");
+
+    setError("Email sending is not configured. Contact us at digioptimized@gmail.com");
     setLoading(false);
   };
 
@@ -119,130 +126,114 @@ export default function Contact() {
     });
   };
 
+  const contactInfo = [
+    { icon: Mail, color: "bg-indigo-600", title: "Email Us", value: "digioptimized@gmail.com", href: "mailto:digioptimized@gmail.com" },
+    { icon: Phone, color: "bg-purple-600", title: "Call Us", value: "+91 8438689782", href: "tel:+918438689782" },
+    { icon: MapPin, color: "bg-emerald-600", title: "Location", value: "Chennai, Tamil Nadu, India", href: null }
+  ];
+
   return (
-    <section id="contact" className="py-12 md:py-20 relative overflow-hidden">
-      {/* Background decoration */}
+    <section ref={sectionRef} id="contact" className="py-12 md:py-16 lg:py-20 relative overflow-hidden bg-gray-50">
+      {/* Animated background */}
       <div className="absolute inset-0 -z-10">
-        <div className="absolute bottom-0 left-0 w-96 h-96 bg-blue-300 rounded-full mix-blend-multiply filter blur-3xl opacity-20"></div>
-        <div className="absolute top-0 right-0 w-96 h-96 bg-cyan-300 rounded-full mix-blend-multiply filter blur-3xl opacity-20"></div>
+        <div className={`absolute bottom-0 left-0 w-[500px] h-[500px] bg-indigo-100/40 rounded-full blur-3xl transition-all duration-1000 ${isVisible ? "opacity-100 scale-100" : "opacity-0 scale-50"}`} />
+        <div className={`absolute top-0 right-0 w-[500px] h-[500px] bg-purple-100/40 rounded-full blur-3xl transition-all duration-1000 delay-200 ${isVisible ? "opacity-100 scale-100" : "opacity-0 scale-50"}`} />
       </div>
 
-      <div className="container mx-auto px-4 md:px-6">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
-        <div className="text-center max-w-3xl mx-auto mb-16 fade-in-up">
-          <span className="inline-block px-4 py-2 bg-blue-50 border border-blue-200 rounded-full text-sm font-medium text-blue-700 mb-4">
-            Contact Us
-          </span>
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-display font-bold mb-4">
-            Let's Build Something <span className="gradient-text">Amazing Together</span>
+        <div className={`text-center max-w-3xl mx-auto mb-12 md:mb-16 transition-all duration-700 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}>
+          <div className="inline-flex items-center gap-2 px-4 py-2 bg-white border border-indigo-100 rounded-full text-sm font-semibold text-indigo-600 mb-5 shadow-sm">
+            <MessageSquare className="w-4 h-4" />
+            Get Your Conversion Audit
+          </div>
+          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-5 leading-tight text-gray-900">
+            Your traffic is valuable.{" "}
+            <span className="bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">Your business deserves a system that converts.</span>
           </h2>
-          <p className="text-lg text-gray-600">
-            Ready to transform your business? Get in touch for a free consultation!
+          <p className="text-base sm:text-lg text-gray-600">
+            Ready to stop losing potential customers? Get your conversion audit today.
           </p>
         </div>
 
-        <div className="grid lg:grid-cols-2 gap-12 max-w-6xl mx-auto">
+        <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 max-w-5xl mx-auto">
           {/* Contact Form */}
-          <div className="glass rounded-3xl p-8 hover-lift">
-            <h3 className="font-display font-bold text-2xl mb-6">Send us a message</h3>
+          <div className={`bg-white rounded-2xl p-6 sm:p-8 shadow-lg border border-gray-100 transition-all duration-700 ${isVisible ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-12"}`} style={{ transitionDelay: "200ms" }}>
+            <h3 className="font-bold text-xl sm:text-2xl mb-6 text-gray-900">Request Your Audit</h3>
             
             <form onSubmit={handleSubmit} className="space-y-5">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Your Name</label>
-                <input
-                  type="text"
-                  name="name"
-                  value={formData.name}
-                  onChange={handleChange}
-                  required
-                  className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition-all"
-                  placeholder="Your Name"
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Email Address</label>
-                <input
-                  type="email"
-                  name="email"
-                  value={formData.email}
-                  onChange={handleChange}
-                  required
-                  className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition-all"
-                  placeholder="Your Email"
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Phone Number</label>
-                <input
-                  type="tel"
-                  name="phone"
-                  value={formData.phone}
-                  onChange={handleChange}
-                  className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition-all"
-                  placeholder="Your Phone"
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Your Message</label>
-                <textarea
-                  name="message"
-                  value={formData.message}
-                  onChange={handleChange}
-                  required
-                  rows="4"
-                  className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition-all resize-none"
-                  placeholder="Tell us about your project..."
-                ></textarea>
-              </div>
-
-                  {error && (
-                    <div className="mb-4 p-3 rounded-lg bg-red-50 border border-red-100 text-red-700">
-                          <div className="text-sm whitespace-pre-line">{error}</div>
-                          <div className="mt-2">
-                            <button
-                              type="button"
-                              onClick={() => {
-                                navigator.clipboard && navigator.clipboard.writeText('digioptimized@gmail.com');
-                                alert('Email address copied to clipboard: digioptimized@gmail.com');
-                              }}
-                              className="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-red-600 text-white text-sm"
-                            >
-                              Copy Email
-                            </button>
-                            {(() => {
-                              const supportEmail = 'digioptimized@gmail.com';
-                              const subject = `Website contact: ${formData.name || ""}`;
-                              const body = `Name: ${formData.name || ""}\nEmail: ${formData.email || ""}\nPhone: ${formData.phone || ""}\n\n${formData.message || ""}`;
-                              const href = `mailto:${supportEmail}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-                              return (
-                                <a href={href} className="ml-3 text-sm text-red-600 underline">Open mail client</a>
-                              );
-                            })()}
-                          </div>
-                    </div>
+              {["name", "email", "phone", "message"].map((field, idx) => (
+                <div key={field} className={`transition-all duration-500 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}`} style={{ transitionDelay: `${300 + idx * 100}ms` }}>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    {field === "name" ? "Your Name" : field === "email" ? "Email Address" : field === "phone" ? "Phone Number" : "Tell us about your project"}
+                    {field === "phone" && <span className="text-gray-400 ml-1">(optional)</span>}
+                  </label>
+                  {field === "message" ? (
+                    <textarea
+                      name={field}
+                      value={formData[field]}
+                      onChange={handleChange}
+                      required={field !== "phone"}
+                      rows="4"
+                      className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none transition-all resize-none bg-gray-50 focus:bg-white"
+                      placeholder="What is your biggest challenge with conversions?"
+                    />
+                  ) : (
+                    <input
+                      type={field === "email" ? "email" : field === "phone" ? "tel" : "text"}
+                      name={field}
+                      value={formData[field]}
+                      onChange={handleChange}
+                      required={field !== "phone"}
+                      className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none transition-all bg-gray-50 focus:bg-white"
+                      placeholder={field === "name" ? "John Doe" : field === "email" ? "john@company.com" : "+91 98765 43210"}
+                    />
                   )}
+                </div>
+              ))}
 
-                  <button
+              {error && (
+                <div className="p-3 rounded-lg bg-red-50 border border-red-100 text-red-700 animate-pulse">
+                  <div className="text-sm">{error}</div>
+                  <div className="mt-2 flex gap-2">
+                    <button
+                      type="button"
+                      onClick={() => { navigator.clipboard?.writeText("digioptimized@gmail.com"); alert("Email copied!"); }}
+                      className="px-3 py-1 rounded-md bg-red-600 text-white text-sm hover:bg-red-700 transition-colors"
+                    >
+                      Copy Email
+                    </button>
+                    <a 
+                      href={`mailto:digioptimized@gmail.com?subject=Website contact: ${formData.name}&body=Name: ${formData.name}\nEmail: ${formData.email}\nPhone: ${formData.phone}\n\n${formData.message}`}
+                      className="text-sm text-red-600 underline py-1"
+                    >
+                      Open mail client
+                    </a>
+                  </div>
+                </div>
+              )}
+
+              <button
                 type="submit"
                 disabled={loading}
-                className={`w-full bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 text-white px-6 py-4 rounded-xl shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-0.5 font-semibold flex items-center justify-center gap-2 ${loading ? 'opacity-70 cursor-wait' : ''}`}
+                className={`group w-full bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-4 rounded-xl shadow-lg hover:shadow-xl hover:shadow-indigo-500/25 transition-all duration-300 transform hover:-translate-y-0.5 font-semibold flex items-center justify-center gap-2 relative overflow-hidden ${loading ? "opacity-70 cursor-wait" : ""} ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}`}
+                style={{ transitionDelay: "700ms" }}
               >
+                <div className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-700 bg-gradient-to-r from-transparent via-white/20 to-transparent" />
                 {submitted ? (
                   <>
-                    <CheckCircle className="w-5 h-5" />
+                    <CheckCircle className="w-5 h-5 animate-bounce" />
                     Message Sent!
                   </>
                 ) : loading ? (
                   <>
+                    <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
                     Sending...
                   </>
                 ) : (
                   <>
-                    Send Message
-                    <Send className="w-5 h-5" />
+                    <span className="relative">Send Message</span>
+                    <Send className="w-5 h-5 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform relative" />
                   </>
                 )}
               </button>
@@ -250,66 +241,48 @@ export default function Contact() {
           </div>
 
           {/* Contact Info */}
-          <div className="space-y-8">
-            <div className="glass rounded-3xl p-8 hover-lift">
-              <h3 className="font-display font-bold text-2xl mb-6">Get in touch</h3>
+          <div className={`space-y-6 transition-all duration-700 ${isVisible ? "opacity-100 translate-x-0" : "opacity-0 translate-x-12"}`} style={{ transitionDelay: "300ms" }}>
+            <div className="bg-white rounded-2xl p-6 sm:p-8 shadow-lg border border-gray-100">
+              <h3 className="font-bold text-xl sm:text-2xl mb-6 text-gray-900">Get in touch</h3>
               
-              <div className="space-y-6">
-                <div className="flex items-start gap-4">
-                  <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500 to-cyan-500 flex items-center justify-center flex-shrink-0">
-                    <Mail className="w-6 h-6 text-white" />
-                  </div>
-                  <div>
-                    <div className="font-semibold mb-1">Email Us</div>
-                    <a href="mailto:digioptimized@gmail.com" className="text-blue-600 hover:underline">
-                      digioptimized@gmail.com
-                    </a>
-                  </div>
-                </div>
-
-                <div className="flex items-start gap-4">
-                  <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center flex-shrink-0">
-                    <Phone className="w-6 h-6 text-white" />
-                  </div>
-                  <div>
-                    <div className="font-semibold mb-1">Call Us</div>
-                    <a href="tel:+15551234567" className="text-blue-600 hover:underline">
-                      +91 8438689782
-                    </a>
-                  </div>
-                </div>
-
-                <div className="flex items-start gap-4">
-                  <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-orange-500 to-red-500 flex items-center justify-center flex-shrink-0">
-                    <MapPin className="w-6 h-6 text-white" />
-                  </div>
-                  <div>
-                    <div className="font-semibold mb-1">Visit Us</div>
-                    <p className="text-gray-600">
-                     chennai, Tamil nadu<br />
-                      India
-                    </p>
-                  </div>
-                </div>
+              <div className="space-y-5">
+                {contactInfo.map((item, idx) => {
+                  const Icon = item.icon;
+                  const Wrapper = item.href ? "a" : "div";
+                  return (
+                    <div key={idx} className={`flex items-start gap-4 transition-all duration-500 ${isVisible ? "opacity-100 translate-x-0" : "opacity-0 translate-x-8"}`} style={{ transitionDelay: `${400 + idx * 100}ms` }}>
+                      <div className={`w-11 h-11 rounded-xl ${item.color} flex items-center justify-center flex-shrink-0 transition-transform hover:scale-110 hover:rotate-6`}>
+                        <Icon className="w-5 h-5 text-white" />
+                      </div>
+                      <div>
+                        <div className="font-semibold text-gray-900 mb-1">{item.title}</div>
+                        <Wrapper {...(item.href ? { href: item.href, className: "text-indigo-600 hover:underline text-sm sm:text-base" } : { className: "text-gray-600 text-sm sm:text-base" })}>
+                          {item.value}
+                        </Wrapper>
+                      </div>
+                    </div>
+                  );
+                })}
               </div>
             </div>
 
             {/* Business Hours */}
-            <div className="glass rounded-3xl p-8">
-              <h4 className="font-display font-bold text-xl mb-4">Business Hours</h4>
-              <div className="space-y-3 text-gray-600">
-                <div className="flex justify-between">
-                  <span>Monday - Friday</span>
-                  <span className="font-semibold text-gray-900">10:00 AM - 6:00 PM</span>
-                </div>
-                <div className="flex justify-between">
-                  <span>Saturday</span>
-                  <span className="font-semibold text-gray-900">10:00 AM - 3:00 PM</span>
-                </div>
-                <div className="flex justify-between">
-                  <span>Sunday</span>
-                  <span className="font-semibold text-gray-900">Closed</span>
-                </div>
+            <div className={`bg-white rounded-2xl p-6 sm:p-8 shadow-lg border border-gray-100 transition-all duration-500 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`} style={{ transitionDelay: "600ms" }}>
+              <h4 className="font-bold text-lg mb-4 text-gray-900 flex items-center gap-2">
+                <Clock className="w-5 h-5 text-indigo-600" />
+                Business Hours
+              </h4>
+              <div className="space-y-3 text-sm">
+                {[
+                  { day: "Monday - Friday", hours: "10:00 AM - 6:00 PM" },
+                  { day: "Saturday", hours: "Closed" },
+                  { day: "Sunday", hours: "Closed" }
+                ].map((item, idx) => (
+                  <div key={idx} className={`flex justify-between transition-all duration-500 ${isVisible ? "opacity-100" : "opacity-0"}`} style={{ transitionDelay: `${700 + idx * 50}ms` }}>
+                    <span className="text-gray-600">{item.day}</span>
+                    <span className={`font-semibold ${item.hours === "Closed" ? "text-red-500" : "text-gray-900"}`}>{item.hours}</span>
+                  </div>
+                ))}
               </div>
             </div>
           </div>

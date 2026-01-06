@@ -1,187 +1,259 @@
-﻿import React, { useState, useEffect } from "react";
-import { Link as ScrollLink } from "react-scroll";
-import { Menu, X, ArrowRight } from "lucide-react";
+import React, { useState, useEffect, useCallback } from "react";
+import { Menu, X, Rocket, ArrowRight, Phone, Mail, ChevronDown } from "lucide-react";
 
 export default function Navbar() {
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [activeSection, setActiveSection] = useState("home");
-
-  const menuItems = [
-    { name: "Home", to: "home" },
-    { name: "About", to: "about" },
-    { name: "Services", to: "services" },
-    { name: "Portfolio", to: "portfolio" },
-    { name: "Process", to: "process" },
-    { name: "FAQ", to: "faq" },
-    { name: "Contact", to: "contact" },
-  ];
+  const [isVisible, setIsVisible] = useState(true);
+  const [lastScrollY, setLastScrollY] = useState(0);
+  
+  const handleScroll = useCallback(() => {
+    const currentScrollY = window.scrollY;
+    
+    // Always keep navbar visible
+    setIsVisible(true);
+    setLastScrollY(currentScrollY);
+    
+    // Background change
+    setScrolled(currentScrollY > 20);
+    
+    // Update active section
+    const sections = ["home", "about", "services", "testimonials", "faq", "contact"];
+    for (const section of sections) {
+      const el = document.getElementById(section);
+      if (el) {
+        const rect = el.getBoundingClientRect();
+        if (rect.top <= 150 && rect.bottom >= 150) {
+          setActiveSection(section);
+          break;
+        }
+      }
+    }
+  }, [lastScrollY]);
 
   useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 20);
-    };
-
-    window.addEventListener("scroll", handleScroll);
-    // Close mobile menu on Escape
-    const handleKey = (e) => {
-      if (e.key === 'Escape' && open) setOpen(false);
-    };
-    window.addEventListener('keydown', handleKey);
+    window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
-    // cleanup keydown as well
-    // (we won't reach this line due to early return style above; unify cleanup below)
+  }, [handleScroll]);
+
+  // Keyboard navigation
+  useEffect(() => {
+    const handleEscape = (e) => {
+      if (e.key === "Escape") setOpen(false);
+    };
+    document.addEventListener("keydown", handleEscape);
+    return () => document.removeEventListener("keydown", handleEscape);
   }, []);
 
-  // Proper cleanup for both listeners
+  // Prevent body scroll when mobile menu is open
   useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 20);
-    const handleKey = (e) => { if (e.key === 'Escape' && open) setOpen(false); };
-    window.addEventListener('scroll', handleScroll);
-    window.addEventListener('keydown', handleKey);
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-      window.removeEventListener('keydown', handleKey);
-    };
+    document.body.style.overflow = open ? "hidden" : "";
+    return () => { document.body.style.overflow = ""; };
   }, [open]);
 
+  const navItems = [
+    { name: "Home", href: "#home" },
+    { name: "About", href: "#about" },
+    { name: "Services", href: "#services" },
+    { name: "FAQ", href: "#faq" },
+    { name: "Contact", href: "#contact" }
+
+    
+  ];
+
   return (
-    <nav
-      className={`fixed top-0 left-0 w-full z-50 transition-all duration-200 ${
-        scrolled 
-          ? "glass shadow-xl py-3 backdrop-blur-lg" 
-          : "bg-white/95 backdrop-blur-sm py-4 shadow-md"
-      }`}
-    >
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center">
-  {/* Sleek Logo */}
-        <ScrollLink
-          to="home"
-          smooth={true}
-          duration={200}
-          spy={true}
-          offset={-80}
-          hashSpy={false}
-          isDynamic={true}
-          onSetActive={() => setActiveSection("home")}
-          className="flex items-center gap-3 text-xl sm:text-2xl lg:text-3xl font-display font-extrabold cursor-pointer group"
-        >
-          <span className="logo-text" title="Digioptimized — Web development & SEO">
-            <span className="gradient-text group-hover:opacity-80 transition-all duration-150">Digioptimized</span>
-            <span className="text-blue-600">.</span>
-          </span>
-        </ScrollLink>
-
-        {/* Ultra Responsive Desktop Menu */}
-        <ul className="hidden lg:flex items-center gap-1">
-          {menuItems.map((item) => (
-            <li key={item.name}>
-              <ScrollLink
-                to={item.to}
-                smooth={true}
-                duration={200}
-                spy={true}
-                offset={-80}
-                hashSpy={false}
-                isDynamic={true}
-                onSetActive={() => setActiveSection(item.to)}
-                className={`nav-link relative px-4 py-2 text-sm font-medium cursor-pointer transition-all duration-150 rounded-lg ${
-                  activeSection === item.to 
-                    ? "text-blue-600 font-bold"
-                    : "text-gray-700 hover:text-blue-600"
-                }`}
-                aria-current={activeSection === item.to ? 'page' : undefined}
-              >
-                {item.name}
-                {/* Animated underline */}
-                <span className={`nav-underline ${activeSection === item.to ? 'active' : ''}`}></span>
-              </ScrollLink>
-            </li>
-          ))}
-          
-          {/* Modern CTA Button */}
-          <li className="ml-3">
-            <a
-              href="https://forms.gle/sUr1uxnakHbk4Tyv8"
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="Book a slot"
-              className="inline-flex items-center gap-2 cta-glow bg-gradient-to-r from-blue-600 to-blue-500 text-white px-5 py-2 rounded-lg cursor-pointer font-semibold text-sm hover:shadow-2xl hover:scale-105 transition-all duration-150 active:scale-95"
+    <>
+      {/* Main Navbar */}
+      <nav 
+        className={`fixed left-0 right-0 z-50 transition-all duration-300 top-0 ${
+          isVisible ? "translate-y-0" : "-translate-y-full"
+        } ${
+          scrolled 
+            ? "bg-white/95 backdrop-blur-xl shadow-lg shadow-gray-200/50 border-b border-gray-100" 
+            : "bg-white/80 backdrop-blur-md lg:bg-transparent"
+        }`}
+        role="navigation"
+        aria-label="Main navigation"
+      >
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between h-16 lg:h-20">
+            
+            {/* Logo */}
+            <a 
+              href="#home" 
+              className="flex items-center gap-3 group"
+              aria-label="Digioptimized - Home"
             >
-              Book Slot
-              <ArrowRight className="w-4 h-4" />
+              <div className="relative">
+                <div className="w-10 h-10 lg:w-11 lg:h-11 bg-gradient-to-br from-indigo-600 to-purple-600 rounded-xl flex items-center justify-center group-hover:scale-110 group-hover:rotate-3 transition-all duration-300 shadow-lg shadow-indigo-500/25">
+                  <Rocket className="w-5 h-5 lg:w-6 lg:h-6 text-white" />
+                </div>
+                <div className="absolute -inset-1 bg-gradient-to-br from-indigo-600 to-purple-600 rounded-xl blur opacity-30 group-hover:opacity-50 transition-opacity -z-10" />
+              </div>
+              <div className="flex flex-col">
+                <span className="font-bold text-lg lg:text-xl text-gray-900 leading-tight">Digioptimized</span>
+                <span className="text-[10px] lg:text-xs text-gray-500 font-medium tracking-wide hidden sm:block">Conversion Systems</span>
+              </div>
             </a>
-          </li>
-        </ul>
 
-        {/* Mobile Menu Button */}
-        <button
-          onClick={() => setOpen(!open)}
-          className="lg:hidden p-2 rounded-lg hover:bg-blue-50 transition-all duration-100 active:scale-95"
-          aria-label="Toggle menu"
-        >
-          {open ? (
-            <X className="w-6 h-6 text-blue-600" />
-          ) : (
-            <Menu className="w-6 h-6 text-gray-800" />
-          )}
-        </button>
-      </div>
+            {/* Desktop Navigation */}
+            <div className="hidden lg:flex items-center">
+              <div className="flex items-center bg-gray-100/80 backdrop-blur-sm rounded-full p-1.5">
+                {navItems.map((item) => (
+                  <a 
+                    key={item.name}
+                    href={item.href}
+                    className={`relative px-4 py-2 text-sm font-medium rounded-full transition-all duration-300 ${
+                      activeSection === item.href.slice(1)
+                        ? "text-white bg-gray-900 shadow-lg"
+                        : "text-gray-600 hover:text-gray-900 hover:bg-white/80"
+                    }`}
+                  >
+                    {item.name}
+                    {activeSection === item.href.slice(1) && (
+                      <span className="absolute inset-0 rounded-full bg-gradient-to-r from-indigo-600 to-purple-600 -z-10" />
+                    )}
+                  </a>
+                ))}
+              </div>
+            </div>
 
-        {/* Ultra Fast Mobile Menu */}
-      <div className={`lg:hidden`} aria-hidden={!open}>
-        {/* overlay for mobile */}
-        <div className={`mobile-overlay ${open ? 'open' : ''}`} onClick={() => setOpen(false)} />
-        <div className={`mobile-panel ${open ? 'open' : ''}`} role="dialog" aria-modal="true">
-          {/* Close button inside mobile panel for quick dismiss */}
-          <div className="flex justify-end p-3">
-            <button
-              onClick={() => setOpen(false)}
-              aria-label="Close menu"
-              className="p-2 rounded-md hover:bg-slate-100 transition-colors duration-150"
+            {/* Desktop CTA */}
+            <div className="hidden lg:flex items-center gap-3">
+              <a 
+                href="tel:+918438689782"
+                className="flex items-center gap-2 px-4 py-2.5 text-gray-700 font-medium hover:text-indigo-600 transition-colors"
+              >
+                <div className="w-9 h-9 rounded-full bg-indigo-50 flex items-center justify-center">
+                  <Phone className="w-4 h-4 text-indigo-600" />
+                </div>
+                <span className="hidden xl:inline">Call Us</span>
+              </a>
+              <a 
+                href="#contact" 
+                className="group relative inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white text-sm font-semibold rounded-full hover:shadow-xl hover:shadow-indigo-500/30 hover:-translate-y-0.5 transition-all duration-300 overflow-hidden"
+              >
+                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
+                <span className="relative">Get Audit</span>
+                <ArrowRight className="w-4 h-4 relative group-hover:translate-x-0.5 transition-transform" />
+              </a>
+            </div>
+
+            {/* Mobile Menu Button */}
+            <button 
+              onClick={() => setOpen(!open)} 
+              className="lg:hidden relative p-2.5 -mr-2 text-gray-700 hover:bg-gray-100 rounded-xl transition-all duration-200"
+              aria-label={open ? "Close menu" : "Open menu"}
+              aria-expanded={open}
             >
-              <X className="w-6 h-6 text-gray-700" />
+              <div className="relative w-6 h-6">
+                <span className={`absolute left-0 block w-6 h-0.5 bg-current transform transition-all duration-300 ${open ? "top-3 rotate-45" : "top-1"}`} />
+                <span className={`absolute left-0 top-3 block w-6 h-0.5 bg-current transition-all duration-300 ${open ? "opacity-0 translate-x-2" : "opacity-100"}`} />
+                <span className={`absolute left-0 block w-6 h-0.5 bg-current transform transition-all duration-300 ${open ? "top-3 -rotate-45" : "top-5"}`} />
+              </div>
+            </button>
+          </div>
+        </div>
+      </nav>
+
+      {/* Mobile Menu Overlay */}
+      <div 
+        className={`fixed inset-0 bg-black/40 backdrop-blur-sm z-40 lg:hidden transition-opacity duration-300 ${
+          open ? "opacity-100" : "opacity-0 pointer-events-none"
+        }`}
+        onClick={() => setOpen(false)}
+        aria-hidden="true"
+      />
+
+      {/* Mobile Menu Panel */}
+      <div 
+        className={`fixed top-0 right-0 h-full w-[300px] sm:w-[320px] bg-white z-50 lg:hidden transition-transform duration-300 ease-out shadow-2xl ${
+          open ? "translate-x-0" : "translate-x-full"
+        }`}
+        role="dialog"
+        aria-modal="true"
+        aria-label="Mobile navigation"
+      >
+        <div className="flex flex-col h-full">
+          {/* Mobile Menu Header */}
+          <div className="flex items-center justify-between p-5 border-b border-gray-100">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 bg-gradient-to-br from-indigo-600 to-purple-600 rounded-xl flex items-center justify-center">
+                <Rocket className="w-5 h-5 text-white" />
+              </div>
+              <span className="font-bold text-lg text-gray-900">Menu</span>
+            </div>
+            <button 
+              onClick={() => setOpen(false)}
+              className="p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-xl transition-colors"
+              aria-label="Close menu"
+            >
+              <X className="w-5 h-5" />
             </button>
           </div>
 
-          <ul className="flex flex-col p-4 gap-2">
-            {menuItems.map((item) => (
-              <li key={item.name}>
-                <ScrollLink
-                  to={item.to}
-                  smooth={true}
-                  duration={200}
-                  spy={true}
-                  offset={-80}
-                  hashSpy={false}
-                  isDynamic={true}
-                  activeClass="bg-blue-50 text-blue-600 font-bold"
-                  onClick={() => {
-                    setOpen(false);
-                    setActiveSection(item.to);
-                  }}
-                  className="block text-gray-700 hover:text-blue-600 hover:bg-blue-50 font-medium py-3 px-4 cursor-pointer transition-all duration-100 rounded-lg active:scale-95"
+          {/* Mobile Menu Links */}
+          <nav className="flex-1 px-4 py-6 overflow-y-auto">
+            <div className="space-y-1">
+              {navItems.map((item, idx) => (
+                <a 
+                  key={item.name}
+                  href={item.href}
+                  className={`flex items-center justify-between px-4 py-3.5 text-base font-medium rounded-xl transition-all duration-200 ${
+                    activeSection === item.href.slice(1)
+                      ? "text-white bg-gradient-to-r from-indigo-600 to-purple-600 shadow-lg shadow-indigo-500/25"
+                      : "text-gray-700 hover:text-indigo-600 hover:bg-indigo-50"
+                  }`}
+                  onClick={() => setOpen(false)}
+                  style={{ animationDelay: `${idx * 50}ms` }}
                 >
-                  {item.name}
-                </ScrollLink>
-              </li>
-            ))}
-            <li className="mt-2 px-2">
-              <a
-                href="https://forms.gle/sUr1uxnakHbk4Tyv8"
-                target="_blank"
-                rel="noopener noreferrer"
-                onClick={() => setOpen(false)}
-                aria-label="Book a slot"
-                className="flex items-center justify-center gap-2 bg-gradient-to-r from-blue-600 to-blue-500 text-white px-5 py-3 rounded-lg cursor-pointer font-semibold text-sm hover:shadow-2xl transition-all duration-150 active:scale-95"
+                  <span>{item.name}</span>
+                  {activeSection === item.href.slice(1) && (
+                    <ChevronDown className="w-4 h-4 -rotate-90" />
+                  )}
+                </a>
+              ))}
+            </div>
+
+            {/* Contact Info in Mobile */}
+            <div className="mt-8 pt-6 border-t border-gray-100">
+              <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-4 px-4">Contact Us</p>
+              <a 
+                href="mailto:digioptimized@gmail.com" 
+                className="flex items-center gap-3 px-4 py-3 text-gray-600 hover:text-indigo-600 hover:bg-indigo-50 rounded-xl transition-all"
               >
-                Book Slot
-                <ArrowRight className="w-4 h-4" />
+                <div className="w-10 h-10 bg-indigo-100 rounded-xl flex items-center justify-center">
+                  <Mail className="w-5 h-5 text-indigo-600" />
+                </div>
+                <span className="text-sm">digioptimized@gmail.com</span>
               </a>
-            </li>
-          </ul>
+              <a 
+                href="tel:+918438689782" 
+                className="flex items-center gap-3 px-4 py-3 text-gray-600 hover:text-indigo-600 hover:bg-indigo-50 rounded-xl transition-all"
+              >
+                <div className="w-10 h-10 bg-emerald-100 rounded-xl flex items-center justify-center">
+                  <Phone className="w-5 h-5 text-emerald-600" />
+                </div>
+                <span className="text-sm">+91 8438689782</span>
+              </a>
+            </div>
+          </nav>
+
+          {/* Mobile Menu Footer */}
+          <div className="p-5 border-t border-gray-100 bg-gray-50">
+            <a 
+              href="#contact" 
+              className="flex items-center justify-center gap-2 w-full px-6 py-4 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-semibold rounded-xl hover:shadow-lg hover:shadow-indigo-500/30 transition-all"
+              onClick={() => setOpen(false)}
+            >
+              Get Your Free Audit
+              <ArrowRight className="w-4 h-4" />
+            </a>
+            <p className="text-center text-xs text-gray-500 mt-3">No commitment required</p>
+          </div>
         </div>
       </div>
-    </nav>
+    </>
   );
 }

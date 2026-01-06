@@ -10,11 +10,9 @@ import FAQ from "./components/FAQ";
 import Contact from "./components/Contact";
 import Footer from "./components/Footer";
 import Legal from "./pages/Legal";
-import Preloader from "./components/Preloader";
 
 export default function App() {
   const [hash, setHash] = useState(typeof window !== 'undefined' ? window.location.hash : '');
-  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const onHash = () => setHash(window.location.hash || '');
@@ -85,9 +83,6 @@ export default function App() {
 
   return (
     <>
-      {/* Premium Preloader */}
-      {isLoading && <Preloader onComplete={() => setIsLoading(false)} />}
-      
       <div className="font-sans bg-white text-gray-800 overflow-hidden">
         {/* Fixed Navbar */}
         <Navbar />
@@ -101,21 +96,20 @@ export default function App() {
         </div>
 
         {/* Smooth Animated Sections */}
-        {!showLegal ? (
+        {showLegal ? (
+          <Legal />
+        ) : (
           <>
             <div className="smooth-appear">
               <Hero />
             </div>
             <About />
             <Services />
-            <Portfolio />
             <Testimonials />
             <Process />
             <FAQ />
             <Contact />
           </>
-        ) : (
-          <Legal />
         )}
       </main>
       

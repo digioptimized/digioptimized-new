@@ -1,105 +1,202 @@
-import React from "react";
-import { Eye, Calendar, Monitor, Code, Megaphone, LifeBuoy, Rocket } from "lucide-react";
+import React, { useEffect, useRef, useState } from "react";
+import { FileSearch, Eye, FileText, ArrowRight, CheckCircle, ClipboardCheck, Send, Lightbulb } from "lucide-react";
 
 export default function Process() {
+  const [isVisible, setIsVisible] = useState(false);
+  const [visibleSteps, setVisibleSteps] = useState(new Set());
+  const [benefitsVisible, setBenefitsVisible] = useState(false);
+  const sectionRef = useRef(null);
+  const stepRefs = useRef([]);
+  const benefitsRef = useRef(null);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            if (entry.target === sectionRef.current) setIsVisible(true);
+            if (entry.target === benefitsRef.current) setBenefitsVisible(true);
+            if (entry.target.dataset.step) {
+              setVisibleSteps((prev) => new Set([...prev, entry.target.dataset.step]));
+            }
+          }
+        });
+      },
+      { threshold: 0.15, rootMargin: "50px" }
+    );
+
+    if (sectionRef.current) observer.observe(sectionRef.current);
+    if (benefitsRef.current) observer.observe(benefitsRef.current);
+    stepRefs.current.forEach((ref) => { if (ref) observer.observe(ref); });
+
+    return () => observer.disconnect();
+  }, []);
+
+  const auditBenefits = [
+    { icon: Eye, text: "Why visitors aren''t taking action" },
+    { icon: Lightbulb, text: "Where you''re losing potential customers" },
+    { icon: CheckCircle, text: "What to fix first for maximum impact" }
+  ];
+
   const steps = [
     {
-      icon: Eye,
-      title: "O — Observe",
-      desc: "We start by understanding your business, goals, and target audience. We don’t just build websites; we build around your brand’s purpose.",
-      color: "from-blue-500 to-cyan-500"
+      num: "01",
+      icon: Send,
+      title: "Request a conversion audit",
+      desc: "Fill out a simple form telling us about your business and website.",
+      color: "indigo"
     },
     {
-      icon: Calendar,
-      title: "P — Plan",
-      desc: "Our team creates a clear strategy for your design, content, and timeline. A perfect plan ensures fast delivery within 7 days.",
-      color: "from-purple-500 to-pink-500"
+      num: "02",
+      icon: FileSearch,
+      title: "We review your conversion flow",
+      desc: "Our team analyzes your entire customer journey to identify gaps.",
+      color: "purple"
     },
     {
-      icon: Monitor,
-      title: "T — Transform",
-      desc: "We convert your ideas into a modern, visually stunning web design. Your vision starts taking digital shape here.",
-      color: "from-orange-500 to-red-500"
-    },
-    {
-      icon: Code,
-      title: "I — Implement",
-      desc: "Our developers bring the design to life with clean, optimized code. Every click, every scroll, built for performance.",
-      color: "from-green-500 to-emerald-500"
-    },
-    {
-      icon: Megaphone,
-      title: "M — Market",
-      desc: "We integrate SEO, Google My Business, and Meta Ads setup to help you grow. Because a website should work for your business, not just look good.",
-      color: "from-indigo-500 to-purple-500"
-    },
-    {
-      icon: LifeBuoy,
-      title: "A — Assist",
-      desc: "After delivery, we stay with you for updates and performance tracking. Your growth journey continues with DigiOptimized.",
-      color: "from-teal-500 to-cyan-500"
+      num: "03",
+      icon: ClipboardCheck,
+      title: "Receive your improvement plan",
+      desc: "A prioritized roadmap showing exactly what to fix and why.",
+      color: "emerald"
     }
   ];
 
+  const colorClasses = {
+    indigo: { bg: "bg-indigo-600", light: "bg-indigo-50", text: "text-indigo-600", border: "border-indigo-200" },
+    purple: { bg: "bg-purple-600", light: "bg-purple-50", text: "text-purple-600", border: "border-purple-200" },
+    emerald: { bg: "bg-emerald-600", light: "bg-emerald-50", text: "text-emerald-600", border: "border-emerald-200" }
+  };
+
   return (
-  <section id="process" className="py-12 md:py-20 relative overflow-hidden">
-      <div className="container mx-auto px-4 md:px-6">
-        {/* Section Header */}
-        <div className="text-center max-w-3xl mx-auto mb-16 fade-in-up">
-          <span className="inline-block px-4 py-2 bg-blue-50 border border-blue-200 rounded-full text-sm font-medium text-blue-700 mb-4">
-            Our Process
-          </span>
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-display font-bold mb-4">
-            The OPTIMA Process — Our 6-Step Success Formula
+    <section ref={sectionRef} id="process" className="py-12 md:py-16 lg:py-20 relative overflow-hidden bg-gradient-to-b from-gray-50 to-white">
+      {/* Animated Background */}
+      <div className="absolute inset-0 -z-10">
+        <div className="absolute top-1/4 left-0 w-[500px] h-[500px] bg-indigo-100/40 rounded-full blur-3xl animate-pulse" style={{ animationDuration: "8s" }} />
+        <div className="absolute bottom-1/4 right-0 w-[500px] h-[500px] bg-purple-100/40 rounded-full blur-3xl animate-pulse" style={{ animationDuration: "10s" }} />
+      </div>
+
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Header with animation */}
+        <div className={`text-center max-w-3xl mx-auto mb-12 md:mb-16 transition-all duration-700 ${
+          isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+        }`}>
+          <div className="inline-flex items-center gap-2 px-4 py-2 bg-white border border-indigo-200 rounded-full text-sm font-semibold text-indigo-600 mb-5 shadow-sm hover:shadow-md hover:scale-105 transition-all">
+            <FileSearch className="w-4 h-4" />
+            The Conversion Audit
+          </div>
+          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-5 leading-tight text-gray-900">
+            Request a{" "}
+            <span className="bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
+              Conversion Audit
+            </span>
           </h2>
-          <p className="text-lg text-gray-600">
-            "Every project we take goes through OPTIMA — our signature process built to deliver success, fast."
+          <p className="text-base sm:text-lg text-gray-600">
+            If you already know your website isn''t converting the way it should, we can help.
           </p>
         </div>
 
-        {/* Process Steps */}
-        <div className="max-w-5xl mx-auto">
-          {steps.map((step, idx) => (
-            <div 
-              key={step.title}
-              className="relative"
-              style={{ animationDelay: `${idx * 0.1}s` }}
-            >
-              <div className="flex flex-col md:flex-row items-center gap-6 mb-12">
-                {/* Step Number & Icon */}
-                <div className="flex-shrink-0">
-                  <div className={`relative w-24 h-24 rounded-2xl bg-gradient-to-br ${step.color} flex items-center justify-center shadow-lg hover:scale-110 transition-transform`}>
-                    <step.icon className="w-12 h-12 text-white" />
-                    <div className="absolute -top-3 -right-3 w-10 h-10 bg-white rounded-full shadow-lg flex items-center justify-center font-display font-bold text-blue-600">
-                      {idx + 1}
-                    </div>
-                  </div>
+        {/* Benefits with animation */}
+        <div 
+          ref={benefitsRef}
+          className={`bg-white rounded-2xl border border-gray-200 shadow-lg p-6 sm:p-8 md:p-10 mb-12 md:mb-16 transition-all duration-700 hover:shadow-xl ${
+            benefitsVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+          }`}
+        >
+          <h3 className="text-lg sm:text-xl font-bold text-gray-900 mb-6 text-center">
+            Our conversion audit helps you understand:
+          </h3>
+          <div className="grid sm:grid-cols-3 gap-4 sm:gap-6">
+            {auditBenefits.map((benefit, idx) => {
+              const Icon = benefit.icon;
+              return (
+                <div 
+                  key={idx} 
+                  className={`flex items-start gap-3 bg-gradient-to-br from-indigo-50 to-purple-50 rounded-xl p-4 sm:p-5 border border-indigo-100 hover:shadow-md hover:scale-105 transition-all duration-300 ${
+                    benefitsVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
+                  }`}
+                  style={{ transitionDelay: `${200 + idx * 100}ms` }}
+                >
+                  <Icon className="w-5 h-5 text-indigo-600 flex-shrink-0 mt-0.5 gentle-float" style={{ animationDelay: `${idx * 0.3}s` }} />
+                  <span className="text-gray-700 font-medium text-[15px]">{benefit.text}</span>
                 </div>
-
-                {/* Step Content */}
-                <div className="flex-1 glass rounded-2xl p-6 hover-lift">
-                  <h3 className="font-display font-bold text-2xl mb-2">{step.title}</h3>
-                  <p className="text-gray-600 leading-relaxed">{step.desc}</p>
-                </div>
-              </div>
-
-              {/* Connector Line */}
-              {idx < steps.length - 1 && (
-                <div className="hidden md:block absolute left-12 top-24 w-0.5 h-12 bg-gradient-to-b from-blue-300 to-transparent"></div>
-              )}
-            </div>
-          ))}
+              );
+            })}
+          </div>
         </div>
 
-        {/* CTA */}
-        <div className="text-center mt-12 fade-in-up">
+        {/* Steps with staggered animation */}
+        <div className="mb-12 md:mb-16">
+          <h3 className={`text-xl sm:text-2xl font-bold text-gray-900 mb-8 text-center transition-all duration-700 ${
+            isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
+          }`} style={{ transitionDelay: "300ms" }}>
+            How it works
+          </h3>
+          <div className="space-y-4 sm:space-y-6">
+            {steps.map((step, idx) => {
+              const Icon = step.icon;
+              const colors = colorClasses[step.color];
+              const isStepVisible = visibleSteps.has(String(idx));
+              return (
+                <div 
+                  key={idx}
+                  ref={(el) => (stepRefs.current[idx] = el)}
+                  data-step={idx}
+                  className={`group flex flex-col sm:flex-row gap-4 sm:gap-6 items-start bg-white rounded-2xl p-5 sm:p-6 border border-gray-200 hover:shadow-xl hover:border-indigo-200 transition-all duration-500 hover:-translate-y-1 ${
+                    isStepVisible ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-12"
+                  }`}
+                  style={{ transitionDelay: `${idx * 150}ms` }}
+                >
+                  <div className="flex items-center gap-4 sm:gap-0">
+                    <div className={`w-12 h-12 sm:w-14 sm:h-14 ${colors.bg} rounded-xl flex items-center justify-center shadow-lg group-hover:scale-110 group-hover:rotate-6 transition-all duration-300`}>
+                      <Icon className="w-6 h-6 sm:w-7 sm:h-7 text-white" />
+                    </div>
+                    <span className={`sm:hidden text-2xl font-bold ${colors.text}`}>{step.num}</span>
+                  </div>
+                  <div className="flex-1">
+                    <div className="flex items-center gap-3 mb-2">
+                      <span className={`hidden sm:block text-sm font-bold ${colors.text} ${colors.light} px-2.5 py-1 rounded-full transition-all duration-300 ${
+                        isStepVisible ? "opacity-100 scale-100" : "opacity-0 scale-0"
+                      }`} style={{ transitionDelay: `${idx * 150 + 200}ms` }}>Step {step.num}</span>
+                      <h4 className="font-bold text-lg text-gray-900 group-hover:text-indigo-600 transition-colors">{step.title}</h4>
+                    </div>
+                    <p className="text-gray-600 text-[15px]">{step.desc}</p>
+                  </div>
+                  
+                  {/* Progress line */}
+                  {idx < steps.length - 1 && (
+                    <div className={`hidden sm:block absolute left-7 top-full w-0.5 h-4 bg-gradient-to-b ${colors.bg} opacity-30`} />
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* Note with animation */}
+        <div className={`text-center mb-10 md:mb-12 transition-all duration-700 ${
+          isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
+        }`} style={{ transitionDelay: "600ms" }}>
+          <p className="text-base sm:text-lg text-gray-600 italic">
+            Designed for serious business owners who are ready to take action.
+          </p>
+        </div>
+
+        {/* CTA with animation */}
+        <div className={`text-center transition-all duration-700 ${
+          isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+        }`} style={{ transitionDelay: "700ms" }}>
           <a 
             href="#contact" 
-            className="inline-flex items-center gap-2 bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 text-white px-8 py-4 rounded-full shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-1 font-semibold"
+            className="group relative inline-flex items-center gap-3 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white px-8 sm:px-10 py-4 sm:py-5 rounded-full shadow-xl hover:shadow-2xl hover:shadow-indigo-500/25 transition-all duration-300 font-bold text-base sm:text-lg hover:-translate-y-1 overflow-hidden"
           >
-            Start Your 7-Day Journey
-            <Rocket className="w-5 h-5" />
+            <div className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-700 bg-gradient-to-r from-transparent via-white/20 to-transparent" />
+            <span className="relative">Request Your Conversion Audit</span>
+            <ArrowRight className="w-5 h-5 sm:w-6 sm:h-6 group-hover:translate-x-1 transition-transform relative" />
           </a>
+          <p className="mt-4 text-sm text-gray-500">
+            Free for qualified businesses
+          </p>
         </div>
       </div>
     </section>
